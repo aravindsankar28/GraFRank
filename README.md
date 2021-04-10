@@ -37,7 +37,7 @@ This repository on a sample dataset based on the ``Cora`` citation network. To e
 features, we use dummy features in the code. 
  
 In order to use your own data, you should use the data format of PyTorch Geometric and may need to update the data 
-loader if the graph is dynamic.
+loader if the graph is dynamic. The code assumes that the node features are first partitioned and then concatenated across the K modalities. The relevant feature dimensions for the modality partitions are provided during model initialization.
 
 ### Repository Organization
 - ``models/`` contains:
