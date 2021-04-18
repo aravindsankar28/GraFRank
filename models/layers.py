@@ -12,6 +12,11 @@ import torch.nn.functional as F
 
 
 class GraFrankConv(MessagePassing):
+    """
+    Modality-specific neighbor aggregation in GraFrank implemented by stacking message-passing layers that are
+    parameterized by friendship attentions over individual node features and pairwise link features.
+    """
+
     def __init__(self, in_channels: Union[int, Tuple[int, int]],
                  out_channels: int, normalize: bool = False,
                  bias: bool = True, **kwargs):  # yapf: disable
@@ -43,7 +48,6 @@ class GraFrankConv(MessagePassing):
 
     def forward(self, x: Union[Tensor, OptPairTensor], edge_index: Adj, edge_attr: OptTensor = None,
                 size: Size = None) -> Tensor:
-        """"""
         if isinstance(x, Tensor):
             x: OptPairTensor = (x, x)
 
@@ -79,6 +83,10 @@ class GraFrankConv(MessagePassing):
 
 
 class CrossModalityAttention(nn.Module):
+    """
+    Cross-Modality Fusion in GraFrank implemented by an attention mechanism across the K modalities.
+    """
+
     def __init__(self, hidden_channels):
         super(CrossModalityAttention, self).__init__()
         self.hidden_channels = hidden_channels
@@ -86,7 +94,12 @@ class CrossModalityAttention(nn.Module):
         self.multi_attn = nn.Sequential(self.multi_linear, nn.Tanh(), nn.Linear(hidden_channels, 1, bias=True))
 
     def forward(self, modality_x_list):
-        result = torch.cat([x.relu().unsqueeze(-2) for x in modality_x_list], -2)  # [...., K, D]
+        """
+
+        :param modality_x_list: list of modality-specific node embeddings.
+        :return: final node embedding after fusion.
+        """
+        result = torch.cat([x.relu().unsqueeze(-2) for x in modality_x_list], -2)  # [...., K, hidden_channels]
         wts = torch.softmax(self.multi_attn(result).squeeze(-1), dim=-1)
         return torch.sum(wts.unsqueeze(-1) * self.multi_linear(result), dim=-2)
 

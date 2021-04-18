@@ -33,8 +33,8 @@ following the instructions [here](https://github.com/rusty1s/pytorch_geometric).
 
 
 ### Input Format
-This repository on a sample dataset based on the ``Cora`` citation network. To ensure compatibility with link 
-features, we use dummy features in the code. 
+This repository uses a sample dataset based on the ``Cora`` citation network. To ensure compatibility with link 
+features, we use dummy features in the code. Note that ``Cora`` is not meant to reproduce our experimental results. 
  
 In order to use your own data, you should use the data format of PyTorch Geometric and may need to update the data 
 loader if the graph is dynamic. The code assumes that the node features are first partitioned and then concatenated across the K modalities. The relevant feature dimensions for the modality partitions are provided during model initialization.
@@ -58,7 +58,7 @@ python train.py
 ## Reference
  If you make use of this code or the GraFrank algorithm in your work, please cite the following paper:
 
-```
+```bibtex
 @inproceedings{sankar2021graph,
   title     = {Graph Neural Networks for Friend Ranking in Large-scale Social Platforms},
   author={Sankar, Aravind and Liu, Yozen and Yu, Jun and Shah, Neil},
